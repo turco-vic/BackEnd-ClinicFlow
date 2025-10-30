@@ -1,20 +1,30 @@
-CREATE DATABASE dbclinicflow;
+CREATE DATABASE clinicflow;
 
-\c dbclinicflow;
+\c clinicflow;
 
-CREATE TABLE patient_dashboard (
+CREATE TABLE patient (
     id SERIAL PRIMARY KEY,
     patient_name VARCHAR(100) NOT NULL,
-    age INT NOT NULL,
-    gender VARCHAR(10) NOT NULL,
-    address VARCHAR(255) NOT NULL,
-    phone_number VARCHAR(15) NOT NULL
+    email VARCHAR(255) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE professional_dashboard (
+CREATE TABLE especialty (
     id SERIAL PRIMARY KEY,
-    professional_name VARCHAR(100) NOT NULL,
-    specialty VARCHAR(100) NOT NULL,
-    phone_number VARCHAR(15) NOT NULL,
-    email VARCHAR(100) NOT NULL
+    especialty VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE doctor (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    especialty_id INT REFERENCES especialty(id)
+);
+
+CREATE TABLE schedule (
+    id SERIAL PRIMARY KEY,
+    patient_id INT REFERENCES patient(id),
+    doctor_id INT REFERENCES doctor(id),
+    consult_date DATE NOT NULL
 );
