@@ -28,3 +28,9 @@ CREATE TABLE schedule (
     doctor_id INT REFERENCES doctor(id),
     consult_date DATE NOT NULL
 );
+
+CREATE TABLE medicalrecord (
+    id SERIAL PRIMARY KEY,
+    patient_info TEXT,
+    patient_id INT REFERENCES patient(id)
+);
