@@ -24,6 +24,7 @@ CREATE TABLE doctor (
     password VARCHAR(255) NOT NULL,
     birth_date DATE NOT NULL,
     number_phone BIGINT NOT NULL,
+    doctor_photo TEXT NOT NULL,
     especialty_id INT REFERENCES especialty(id)
 );
 
@@ -45,7 +46,7 @@ INSERT INTO patient(patient_name, email, password, birth_date, cpf, number_phone
 
 INSERT INTO especialty(especialty) VALUES('Cardiologista');
 
-INSERT INTO doctor(name, email, password, birth_date, number_phone, especialty_id) VALUES('Dr. Ana Silva', 'ana.silva@gmail.com', '312318u', '1980-05-15', 21987654321, 1);
+INSERT INTO doctor(name, email, password, birth_date, number_phone, doctor_photo,especialty_id) VALUES('Dr. Ana Silva', 'ana.silva@gmail.com', '312318u', '1980-05-15', 21987654321, 'https://www.google.com/imgres?q=imagem%20de%20doutor&imgurl=https%3A%2F%2Fdoutorhome.com.br%2Fwp-content%2Fuploads%2F2024%2F06%2Fmedicos-829x1024.png&imgrefurl=https%3A%2F%2Fdoutorhome.com.br%2F&docid=pBmw4ZGoUTzVbM&tbnid=LFvCJ6KQDvlDFM&vet=12ahUKEwi755ne89iQAxW6K7kGHcAkATkQM3oECBsQAA..i&w=829&h=1024&hcb=2&ved=2ahUKEwi755ne89iQAxW6K7kGHcAkATkQM3oECBsQAA', 1);
 
 INSERT INTO schedule(patient_id, doctor_id, consult_date, consult_hour) VALUES(1, 1, '2025-12-10', '10:30:00');
 
