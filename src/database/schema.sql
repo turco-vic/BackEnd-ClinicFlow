@@ -8,8 +8,8 @@ CREATE TABLE patient (
     email VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
     birth_date DATE NOT NULL,
-    cpf INT NOT NULL,
-    number_phone INT NOT NULL
+    cpf BIGINT NOT NULL,
+    number_phone BIGINT NOT NULL
 );
 
 CREATE TABLE especialty (
@@ -23,7 +23,7 @@ CREATE TABLE doctor (
     email VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
     birth_date DATE NOT NULL,
-    number_phone INT NOT NULL
+    number_phone BIGINT NOT NULL,
     especialty_id INT REFERENCES especialty(id)
 );
 
@@ -41,7 +41,7 @@ CREATE TABLE medicalrecord (
     patient_id INT REFERENCES patient(id)
 );
 
-INSERT INTO patient(patient_name, email, password, birth_date, cpf, number_phone) VALUES('Roberto', 'roberto123@gmail.com', '123kopk', '2025-12-04', 76755347861, 1940028922);
+INSERT INTO patient(patient_name, email, password, birth_date, cpf, number_phone) VALUES('João Pereira', 'joao.pereira@gmail.com', 'senha123', '1990-03-25', 12345678901, 21912345678);
 
 INSERT INTO especialty(especialty) VALUES('Cardiologista');
 
