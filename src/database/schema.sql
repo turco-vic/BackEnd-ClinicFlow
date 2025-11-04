@@ -4,9 +4,9 @@ CREATE DATABASE clinicflow;
 
 CREATE TABLE patients (
     id SERIAL PRIMARY KEY,
-    patient_name VARCHAR(100) NOT NULL,
-    email VARCHAR(255) NOT NULL UNIQUE,
-    password VARCHAR(255) NOT NULL,
+    patient_name TEXT NOT NULL,
+    email TEXT NOT NULL UNIQUE,
+    password TEXT NOT NULL,
     birth_date DATE NOT NULL,
     cpf BIGINT NOT NULL,
     number_phone BIGINT NOT NULL
