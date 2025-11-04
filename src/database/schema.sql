@@ -2,7 +2,7 @@ CREATE DATABASE clinicflow;
 
 \c clinicflow;
 
-CREATE TABLE patient (
+CREATE TABLE patients (
     id SERIAL PRIMARY KEY,
     patient_name VARCHAR(100) NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,
@@ -30,7 +30,7 @@ CREATE TABLE doctor (
 
 CREATE TABLE schedule (
     id SERIAL PRIMARY KEY,
-    patient_id INT REFERENCES patient(id),
+    patient_id INT REFERENCES patients(id),
     doctor_id INT REFERENCES doctor(id),
     consult_date DATE NOT NULL,
     consult_hour TIME NOT NULL
@@ -39,10 +39,10 @@ CREATE TABLE schedule (
 CREATE TABLE medicalrecord (
     id SERIAL PRIMARY KEY,
     patient_info TEXT,
-    patient_id INT REFERENCES patient(id)
+    patient_id INT REFERENCES patients(id)
 );
 
-INSERT INTO patient(patient_name, email, password, birth_date, cpf, number_phone) VALUES('João Pereira', 'joao.pereira@gmail.com', 'senha123', '1990-03-25', 12345678901, 21912345678);
+INSERT INTO patients(patient_name, email, password, birth_date, cpf, number_phone) VALUES('João Pereira', 'joao.pereira@gmail.com', 'senha123', '1990-03-25', 12345678901, 21912345678);
 
 INSERT INTO especialty(especialty) VALUES('Cardiologista');
 
