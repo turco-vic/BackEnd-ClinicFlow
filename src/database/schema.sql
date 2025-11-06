@@ -25,6 +25,7 @@ CREATE TABLE doctors (
     birth_date DATE NOT NULL,
     number_phone BIGINT NOT NULL,
     especialty_id INT REFERENCES especialtys(id)
+    doctor_photo TEXT NOT NULL,
 );
 
 CREATE TABLE schedules (
