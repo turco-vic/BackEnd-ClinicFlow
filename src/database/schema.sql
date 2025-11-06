@@ -4,7 +4,7 @@ CREATE DATABASE clinicflow;
 
 CREATE TABLE patients (
     id SERIAL PRIMARY KEY,
-    patient_name VARCHAR(100) NOT NULL,
+    patient_name TEXT NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
     birth_date DATE NOT NULL,
@@ -24,8 +24,8 @@ CREATE TABLE doctors (
     password VARCHAR(255) NOT NULL,
     birth_date DATE NOT NULL,
     number_phone BIGINT NOT NULL,
-    especialty_id INT REFERENCES especialtys(id)
-    doctor_photo TEXT NOT NULL,
+    especialty_id INT REFERENCES especialtys(id),
+    doctor_photo TEXT
 );
 
 CREATE TABLE schedules (
