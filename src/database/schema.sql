@@ -4,9 +4,9 @@ CREATE DATABASE clinicflow;
 
 CREATE TABLE patients (
     id SERIAL PRIMARY KEY,
-    patient_name VARCHAR(100) NOT NULL,
-    email VARCHAR(255) NOT NULL UNIQUE,
-    password VARCHAR(255) NOT NULL,
+    patient_name TEXT NOT NULL,
+    email TEXT NOT NULL UNIQUE,
+    password TEXT NOT NULL,
     birth_date DATE NOT NULL,
     cpf BIGINT UNIQUE NOT NULL,
     number_phone BIGINT UNIQUE NOT NULL,
@@ -24,9 +24,9 @@ CREATE TABLE doctors (
     email VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
     birth_date DATE NOT NULL,
-    number_phone BIGINT UNIQUE NOT NULL,
-    especialty_id INT REFERENCES especialtys(id)
-    doctor_photo TEXT NOT NULL,
+    number_phone BIGINT NOT NULL,
+    especialty_id INT REFERENCES especialtys(id),
+    doctor_photo TEXT
 );
 
 CREATE TABLE schedules (
@@ -165,22 +165,22 @@ INSERT INTO especialtys(especialty) VALUES
 ('Endocrinologia e Metabologia'),
 ('Geriatria');
 
-INSERT INTO doctors(name, email, password, birth_date, number_phone, especialty_id) VALUES
-('Dr. Ana Silva', 'ana.silva@gmail.com', '312318u', '1980-05-15', 21987654321, 1),
-('Dr. Carlos Mendes', 'carlos.mendes@clinica.com', 'cM8x#Pw2', '1975-03-20', 21987654322, 2),
-('Dra. Patricia Lima', 'patricia.lima@clinica.com', 'pL4k@Hn7', '1982-07-11', 21987654323, 3),
-('Dr. Roberto Santos', 'roberto.santos@clinica.com', 'rS6t$Qw3', '1978-11-30', 21987654324, 4),
-('Dra. Juliana Costa', 'juliana.costa@clinica.com', 'jC2r!Dm9', '1985-02-14', 21987654325, 5),
-('Dr. Fernando Oliveira', 'fernando.oliveira@clinica.com', 'fO7n#Vk5', '1979-09-05', 21987654326, 6),
-('Dra. Mariana Alves', 'mariana.alves@clinica.com', 'mA3w$Zt1', '1983-04-22', 21987654327, 7),
-('Dr. Paulo Rodrigues', 'paulo.rodrigues@clinica.com', 'pR9s!Bn6', '1976-12-18', 21987654328, 8),
-('Dra. Amanda Ferreira', 'amanda.ferreira@clinica.com', 'aF5y@Gm2', '1984-06-27', 21987654329, 9),
-('Dr. Ricardo Martins', 'ricardo.martins@clinica.com', 'rM1p#Jl8', '1981-01-09', 21987654330, 10),
-('Dra. Camila Ribeiro', 'camila.ribeiro@clinica.com', 'cR6m$Yr4', '1986-08-15', 21987654331, 11),
-('Dr. Bruno Carvalho', 'bruno.carvalho@clinica.com', 'bC2k!Hp9', '1977-03-03', 21987654332, 12),
-('Dra. Daniela Barbosa', 'daniela.barbosa@clinica.com', 'dB8x#Kl5', '1980-10-21', 21987654333, 13),
-('Dr. Gustavo Sousa', 'gustavo.sousa@clinica.com', 'gS4t@Vp1', '1988-05-16', 21987654334, 14),
-('Dra. Beatriz Mendes', 'beatriz.mendes@clinica.com', 'bM9r$Fn6', '1974-11-28', 21987654335, 15),
+INSERT INTO doctors(name, email, password, birth_date, number_phone, especialty_id, doctor_photo) VALUES
+('Dr. Ana Silva', 'ana.silva@gmail.com', '312318u', '1980-05-15', 21987654321, 1, 'anaSilva.png'),
+('Dr. Carlos Mendes', 'carlos.mendes@clinica.com', 'cM8x#Pw2', '1975-03-20', 21987654322, 2, 'carlosMendes.png'),
+('Dra. Patricia Lima', 'patricia.lima@clinica.com', 'pL4k@Hn7', '1982-07-11', 21987654323, 3, 'patriciaLima.png'),
+('Dr. Roberto Santos', 'roberto.santos@clinica.com', 'rS6t$Qw3', '1978-11-30', 21987654324, 4, 'robertoSantos.png'),
+('Dra. Juliana Costa', 'juliana.costa@clinica.com', 'jC2r!Dm9', '1985-02-14', 21987654325, 5, 'julianaCosta.png'),
+('Dr. Fernando Oliveira', 'fernando.oliveira@clinica.com', 'fO7n#Vk5', '1979-09-05', 21987654326, 6, 'fernandoOliveira.png'),
+('Dra. Mariana Alves', 'mariana.alves@clinica.com', 'mA3w$Zt1', '1983-04-22', 21987654327, 7, 'marianaAlves.png'),
+('Dr. Paulo Rodrigues', 'paulo.rodrigues@clinica.com', 'pR9s!Bn6', '1976-12-18', 21987654328, 8, 'pauloRodrigues.png'),
+('Dra. Amanda Ferreira', 'amanda.ferreira@clinica.com', 'aF5y@Gm2', '1984-06-27', 21987654329, 9, 'amandaFerreira.png'),
+('Dr. Ricardo Martins', 'ricardo.martins@clinica.com', 'rM1p#Jl8', '1981-01-09', 21987654330, 10, 'ricardoMartins.png'),
+('Dra. Camila Ribeiro', 'camila.ribeiro@clinica.com', 'cR6m$Yr4', '1986-08-15', 21987654331, 11, 'camilaRibeiro.png'),
+('Dr. Bruno Carvalho', 'bruno.carvalho@clinica.com', 'bC2k!Hp9', '1977-03-03', 21987654332, 12, 'brunoCarvalho.png'),
+('Dra. Daniela Barbosa', 'daniela.barbosa@clinica.com', 'dB8x#Kl5', '1980-10-21', 21987654333, 13, 'danielaBarbosa.png'),
+('Dr. Gustavo Sousa', 'gustavo.sousa@clinica.com', 'gS4t@Vp1', '1988-05-16', 21987654334, 14, 'gustavoSousa.png'),
+('Dra. Beatriz Mendes', 'beatriz.mendes@clinica.com', 'bM9r$Fn6', '1974-11-28', 21987654335, 15, 'beatrizMendes.png'),
 ('Dr. Leonardo Campos', 'leonardo.campos@clinica.com', 'lC5p!Mx2', '1983-07-07', 21987654336, 16),
 ('Dra. Fernanda Dias', 'fernanda.dias@clinica.com', 'fD1n#Bk7', '1987-02-19', 21987654337, 17),
 ('Dr. Thiago Pinto', 'thiago.pinto@clinica.com', 'tP6w@Gt3', '1979-09-25', 21987654338, 18),
