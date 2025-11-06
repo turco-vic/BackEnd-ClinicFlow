@@ -24,11 +24,12 @@ const getPatient = async (req, res) => {
 
 const createPatient = async (req, res) => {
     try {
-        const { patient_name, email, password, birth_date, cpf, number_phone } = req.body;
+        const {patient_name, email, password, birth_date, cpf, number_phone } = req.body;
         if (!patient_name || !email || !password || !birth_date || !cpf || !number_phone) {
             return res.status(400).json({ message: "Todos campos devem ser preenchidos." });
         }
-        const created = await patientsModel.createPatient(patient_name, email, password, birth_date, cpf, number_phone);
+        const created = await patientsModel.createPatient(patient_name, email, password, birth_date, cpf, number_phone );
+        console.log(email);
         return res.status(201).json(created);
     } catch (error) {
         console.error(error);
