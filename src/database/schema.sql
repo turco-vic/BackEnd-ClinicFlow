@@ -4,7 +4,6 @@ CREATE DATABASE clinicflow;
 
 CREATE TYPE role AS ENUM ('MEDICO', 'PACIENTE');
 
-
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     nome TEXT,
@@ -13,7 +12,6 @@ CREATE TABLE users (
     role role DEFAULT 'PACIENTE'
 );
 
-
 CREATE TABLE patients (
     id SERIAL PRIMARY KEY,
     user_id INT UNIQUE NOT NULL REFERENCES users(id) ON DELETE CASCADE,
@@ -21,7 +19,6 @@ CREATE TABLE patients (
     cpf VARCHAR(14) NOT NULL UNIQUE,
     number_phone VARCHAR(20) NOT NULL
 );
-
 
 CREATE TABLE especialtys (
     id SERIAL PRIMARY KEY,
@@ -46,15 +43,12 @@ CREATE TABLE schedules (
     consult_hour TIME NOT NULL
 );
 
-
 CREATE TABLE medicalrecords (
     id SERIAL PRIMARY KEY,
     patient_info TEXT NOT NULL,
     patient_id INT NOT NULL REFERENCES patients(id) ON DELETE CASCADE
 );
 
-
--- Inserindo usuários pacientes
 INSERT INTO users(nome, email, password, role) VALUES
 ('João Pereira', 'joao.pereira@gmail.com', 'jP8x!Qm4', 'PACIENTE'),
 ('Maria Souza', 'maria.souza@gmail.com', 'mS3k@Hn9', 'PACIENTE'),
@@ -257,7 +251,6 @@ INSERT INTO users(nome, email, password, role) VALUES
 ('Dra. Renata Siqueira', 'renata.siqueira@clinica.com', 'rS2m!Fn5', 'MEDICO'),
 ('Dr. Marcos Porto', 'marcos.porto@clinica.com', 'mP6k@Mz2', 'MEDICO');
 
--- Inserindo dados dos pacientes na tabela patients
 INSERT INTO patients(user_id, birth_date, cpf, number_phone) VALUES
 (1, '1990-03-25', '12345678901', '21912345678'),
 (2, '1995-07-30', '98765432100', '21987654321'),
@@ -380,7 +373,6 @@ INSERT INTO especialtys(especialty) VALUES
 ('Endocrinologia e Metabologia'),
 ('Geriatria');
 
--- Inserindo dados dos médicos na tabela doctors
 INSERT INTO doctors(user_id, name, birth_date, number_phone, especialty_id, doctor_photo) VALUES
 (101, 'Dr. Joao Silva', '1980-05-15', '21987654321', 1, '/uploads/medico1.png'),
 (102, 'Dr. Carlos Mendes', '1975-03-20', '21987654322', 2, '/uploads/medico2.png'),
