@@ -5,6 +5,7 @@ const patientRoutes = require("./src/routes/patientRoutes");
 const especialtyRoutes = require("./src/routes/especialtyRoutes");
 const doctorRoutes = require("./src/routes/doctorsRoutes");
 const userRoutes = require("./src/routes/usersRoutes");
+const scheduleRoutes = require("./src/routes/schedulesRoutes");
 
 const path = require("path");
 const app = express();
@@ -17,6 +18,7 @@ app.use("/api/pacientes", patientRoutes);
 app.use("/api/especialidades", especialtyRoutes);
 app.use("/api/medicos", doctorRoutes);
 app.use("/api/usuarios", userRoutes);
+app.use("/api/agendamentos", scheduleRoutes);
 
 // Rota de teste
 app.get("/", (req, res) => {
