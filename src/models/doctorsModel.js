@@ -3,7 +3,7 @@ const bcrypt = require("bcryptjs");
 
 const getDoctors = async () => {
     const result = await pool.query(
-        `SELECT d.id, u.nome, u.email, d.birth_date, d.number_phone, 
+        `SELECT d.id, u.nome, u.email, d.name, d.birth_date, d.number_phone, 
                 d.especialty_id, d.doctor_photo, e.especialty
          FROM doctors d 
          JOIN users u ON d.user_id = u.id
@@ -15,7 +15,7 @@ const getDoctors = async () => {
 
 const getDoctorById = async (id) => {
     const result = await pool.query(
-        `SELECT d.id, d.user_id, u.nome, u.email, d.birth_date, d.number_phone, 
+        `SELECT d.id, d.user_id, d.name, u.nome, u.email, d.birth_date, d.number_phone, 
                 d.especialty_id, d.doctor_photo, e.especialty
          FROM doctors d 
          JOIN users u ON d.user_id = u.id
@@ -28,7 +28,7 @@ const getDoctorById = async (id) => {
 
 const getDoctorByUserId = async (user_id) => {
     const result = await pool.query(
-        `SELECT d.id, d.user_id, u.nome, u.email, d.birth_date, d.number_phone, 
+        `SELECT d.id, d.user_id, d.name, u.nome, u.email, d.birth_date, d.number_phone, 
                 d.especialty_id, d.doctor_photo, e.especialty
          FROM doctors d 
          JOIN users u ON d.user_id = u.id
@@ -39,12 +39,10 @@ const getDoctorByUserId = async (user_id) => {
     return result.rows[0];
 };
 
-const createDoctor = async (nome, email, password, birth_date, number_phone, especialty_id, doctor_photo) => {
+const createDoctor = async (nome, email, password, name, birth_date, number_phone, especialty_id, doctor_photo) => {
     const client = await pool.connect();
     try {
         await client.query('BEGIN');
-        
-        // Verificar se o email já existe
         const existingUser = await client.query(
             'SELECT id FROM users WHERE email = $1', 
             [email]
@@ -54,27 +52,22 @@ const createDoctor = async (nome, email, password, birth_date, number_phone, esp
             throw new Error('Email já está em uso');
         }
         
-        // Hash da senha
         const saltRounds = 10;
         const hashedPassword = await bcrypt.hash(password, saltRounds);
-        
-        // Criar usuário com role MEDICO
         const userResult = await client.query(
             `INSERT INTO users (nome, email, password, role) 
              VALUES ($1, $2, $3, 'MEDICO') RETURNING id`,
             [nome, email, hashedPassword]
         );
         
-        // Criar médico
         const doctorResult = await client.query(
-            `INSERT INTO doctors (user_id, birth_date, number_phone, especialty_id, doctor_photo) 
+            `INSERT INTO doctors (user_id, name, birth_date, number_phone, especialty_id, doctor_photo) 
              VALUES ($1, $2, $3, $4, $5) RETURNING *`,
-            [userResult.rows[0].id, birth_date, number_phone, especialty_id, doctor_photo]
+            [userResult.rows[0].id, name, birth_date, number_phone, especialty_id, doctor_photo]
         );
         
         await client.query('COMMIT');
         
-        // Retornar dados completos do médico criado
         const completeDoctorData = await getDoctorById(doctorResult.rows[0].id);
         return completeDoctorData;
         
@@ -86,12 +79,11 @@ const createDoctor = async (nome, email, password, birth_date, number_phone, esp
     }
 };
 
-const updateDoctor = async (id, nome, email, birth_date, number_phone, especialty_id, doctor_photo) => {
+const updateDoctor = async (id, nome, email, name, birth_date, number_phone, especialty_id, doctor_photo) => {
     const client = await pool.connect();
     try {
         await client.query('BEGIN');
         
-        // Buscar o user_id do médico
         const doctorData = await client.query(
             'SELECT user_id FROM doctors WHERE id = $1',
             [id]
@@ -103,7 +95,6 @@ const updateDoctor = async (id, nome, email, birth_date, number_phone, especialt
         
         const user_id = doctorData.rows[0].user_id;
         
-        // Verificar se o email já existe para outro usuário
         if (email) {
             const existingUser = await client.query(
                 'SELECT id FROM users WHERE email = $1 AND id != $2', 
@@ -115,7 +106,6 @@ const updateDoctor = async (id, nome, email, birth_date, number_phone, especialt
             }
         }
         
-        // Atualizar dados do usuário (apenas campos fornecidos)
         if (nome || email) {
             let updateUserQuery = 'UPDATE users SET ';
             let updateUserParams = [];
@@ -133,7 +123,6 @@ const updateDoctor = async (id, nome, email, birth_date, number_phone, especialt
                 paramCount++;
             }
             
-            // Remover a última vírgula e espaço
             updateUserQuery = updateUserQuery.slice(0, -2);
             updateUserQuery += ` WHERE id = $${paramCount}`;
             updateUserParams.push(user_id);
@@ -141,11 +130,16 @@ const updateDoctor = async (id, nome, email, birth_date, number_phone, especialt
             await client.query(updateUserQuery, updateUserParams);
         }
         
-        // Atualizar dados específicos do médico (apenas campos fornecidos)
         let updateDoctorQuery = 'UPDATE doctors SET ';
         let updateDoctorParams = [];
         let paramCount = 1;
         
+        if (name) {
+            updateDoctorQuery += `name = $${paramCount}, `;
+            updateDoctorParams.push(name);
+            paramCount++;
+        }
+
         if (birth_date) {
             updateDoctorQuery += `birth_date = $${paramCount}, `;
             updateDoctorParams.push(birth_date);
@@ -171,7 +165,6 @@ const updateDoctor = async (id, nome, email, birth_date, number_phone, especialt
         }
         
         if (updateDoctorParams.length > 0) {
-            // Remover a última vírgula e espaço
             updateDoctorQuery = updateDoctorQuery.slice(0, -2);
             updateDoctorQuery += ` WHERE id = $${paramCount}`;
             updateDoctorParams.push(id);
@@ -181,7 +174,6 @@ const updateDoctor = async (id, nome, email, birth_date, number_phone, especialt
         
         await client.query('COMMIT');
         
-        // Retornar dados atualizados completos
         const updatedDoctor = await getDoctorById(id);
         return updatedDoctor;
         
@@ -198,14 +190,12 @@ const deleteDoctor = async (id) => {
     try {
         await client.query('BEGIN');
         
-        // Buscar dados do médico antes de deletar
         const doctorData = await getDoctorById(id);
         
         if (!doctorData) {
             return null;
         }
         
-        // Deletar médico (CASCADE irá deletar o usuário automaticamente)
         await client.query(
             'DELETE FROM doctors WHERE id = $1', 
             [id]
@@ -224,7 +214,7 @@ const deleteDoctor = async (id) => {
 
 const getDoctorsByEspecialty = async (especialty_id) => {
     const result = await pool.query(
-        `SELECT d.id, u.nome, u.email, d.birth_date, d.number_phone, 
+        `SELECT d.id, u.nome, u.email, d.name, d.birth_date, d.number_phone, 
                 d.especialty_id, d.doctor_photo, e.especialty
          FROM doctors d 
          JOIN users u ON d.user_id = u.id
@@ -238,7 +228,7 @@ const getDoctorsByEspecialty = async (especialty_id) => {
 
 const searchDoctors = async (searchTerm) => {
     const result = await pool.query(
-        `SELECT d.id, u.nome, u.email, d.birth_date, d.number_phone, 
+        `SELECT d.id, u.nome, u.email, d.name, d.birth_date, d.number_phone, 
                 d.especialty_id, d.doctor_photo, e.especialty
          FROM doctors d 
          JOIN users u ON d.user_id = u.id

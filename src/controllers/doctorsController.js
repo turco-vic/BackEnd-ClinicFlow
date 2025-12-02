@@ -24,15 +24,12 @@ const getDoctor = async (req, res) => {
 
 const createDoctor = async (req, res) => {
     try {
-        const { nome, email, password, birth_date, number_phone, especialty_id } = req.body;
-        
-        // Verificar se o arquivo foi enviado pelo multer
+        const { nome, email, password, name, birth_date, number_phone, especialty_id } = req.body;
         const doctor_photo = req.file ? req.file.path : null;
-        
-        if (!nome || !email || !password || !birth_date || !number_phone || !especialty_id) {
+        if (!nome || !email || !password || !name || !birth_date || !number_phone || !especialty_id) {
             return res.status(400).json({ message: "Todos os campos obrigatórios devem ser preenchidos." });
         }
-        const created = await doctorsModel.createDoctor(nome, email, password, birth_date, number_phone, especialty_id, doctor_photo);
+        const created = await doctorsModel.createDoctor(nome, email, password, name, birth_date, number_phone, especialty_id, doctor_photo);
         return res.status(201).json(created);
     } catch (error) {
         console.error(error);
@@ -46,12 +43,9 @@ const createDoctor = async (req, res) => {
 const updateDoctor = async (req, res) => {
     try {
         const { id } = req.params;
-        const { nome, email, birth_date, number_phone, especialty_id } = req.body;
-        
-        // Se um novo arquivo foi enviado, usar o novo caminho, senão manter o existente
+        const { nome, email, name, birth_date, number_phone, especialty_id } = req.body;
         const doctor_photo = req.file ? req.file.path : undefined;
-        
-        const updatedDoctor = await doctorsModel.updateDoctor(id, nome, email, birth_date, number_phone, especialty_id, doctor_photo);
+        const updatedDoctor = await doctorsModel.updateDoctor(id, nome, email, name, birth_date, number_phone, especialty_id, doctor_photo);
         if (!updatedDoctor) return res.status(404).json({ message: "Médico não encontrado ou sem campos para atualizar." });
         return res.json(updatedDoctor);
     } catch (error) {

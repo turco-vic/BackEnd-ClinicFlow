@@ -1,4 +1,3 @@
-// src/models/usersModel.js
 const pool = require("../config/database");
 
 const getUserByEmail = async (email) => {

@@ -5,7 +5,7 @@ const upload = require("../config/upload.js");
 
 // Rotas básicas CRUD
 router.get("/", doctorController.getAllDoctors);
-router.get("/search", doctorController.searchDoctors); // Query: ?search=termo
+router.get("/search", doctorController.searchDoctors); 
 router.get("/especialty/:especialty_id", doctorController.getDoctorsByEspecialty);
 router.get("/:id", doctorController.getDoctor);
 router.post("/", upload.single("doctor_photo"), doctorController.createDoctor);

@@ -49,7 +49,6 @@ const createPatient = async (nome, email, password, birth_date, cpf, number_phon
     try {
         await client.query('BEGIN');
         
-        // Verificar se o email já existe
         const existingUser = await client.query(
             'SELECT id FROM users WHERE email = $1', 
             [email]
@@ -59,7 +58,6 @@ const createPatient = async (nome, email, password, birth_date, cpf, number_phon
             throw new Error('Email já está em uso');
         }
         
-        // Verificar se o CPF já existe
         const existingCpf = await client.query(
             'SELECT id FROM patients WHERE cpf = $1', 
             [cpf]
@@ -69,18 +67,15 @@ const createPatient = async (nome, email, password, birth_date, cpf, number_phon
             throw new Error('CPF já está cadastrado');
         }
         
-        // Hash da senha
         const saltRounds = 10;
         const hashedPassword = await bcrypt.hash(password, saltRounds);
         
-        // Criar usuário com role PACIENTE
         const userResult = await client.query(
             `INSERT INTO users (nome, email, password, role) 
              VALUES ($1, $2, $3, 'PACIENTE') RETURNING id`,
             [nome, email, hashedPassword]
         );
         
-        // Criar paciente
         const patientResult = await client.query(
             `INSERT INTO patients (user_id, birth_date, cpf, number_phone) 
              VALUES ($1, $2, $3, $4) RETURNING *`,
@@ -89,7 +84,6 @@ const createPatient = async (nome, email, password, birth_date, cpf, number_phon
         
         await client.query('COMMIT');
         
-        // Retornar dados completos do paciente criado
         const completePatientData = await getPatientById(patientResult.rows[0].id);
         return completePatientData;
         
@@ -106,7 +100,6 @@ const updatePatient = async (id, nome, email, birth_date, cpf, number_phone) => 
     try {
         await client.query('BEGIN');
         
-        // Buscar o user_id do paciente
         const patientData = await client.query(
             'SELECT user_id FROM patients WHERE id = $1',
             [id]
@@ -118,7 +111,6 @@ const updatePatient = async (id, nome, email, birth_date, cpf, number_phone) => 
         
         const user_id = patientData.rows[0].user_id;
         
-        // Verificar se o email já existe para outro usuário
         if (email) {
             const existingUser = await client.query(
                 'SELECT id FROM users WHERE email = $1 AND id != $2', 
@@ -130,7 +122,6 @@ const updatePatient = async (id, nome, email, birth_date, cpf, number_phone) => 
             }
         }
         
-        // Verificar se o CPF já existe para outro paciente
         if (cpf) {
             const existingCpf = await client.query(
                 'SELECT id FROM patients WHERE cpf = $1 AND id != $2', 
@@ -142,7 +133,6 @@ const updatePatient = async (id, nome, email, birth_date, cpf, number_phone) => 
             }
         }
         
-        // Atualizar dados do usuário (apenas campos fornecidos)
         if (nome || email) {
             let updateUserQuery = 'UPDATE users SET ';
             let updateUserParams = [];
@@ -160,7 +150,6 @@ const updatePatient = async (id, nome, email, birth_date, cpf, number_phone) => 
                 paramCount++;
             }
             
-            // Remover a última vírgula e espaço
             updateUserQuery = updateUserQuery.slice(0, -2);
             updateUserQuery += ` WHERE id = $${paramCount}`;
             updateUserParams.push(user_id);
@@ -168,7 +157,6 @@ const updatePatient = async (id, nome, email, birth_date, cpf, number_phone) => 
             await client.query(updateUserQuery, updateUserParams);
         }
         
-        // Atualizar dados específicos do paciente (apenas campos fornecidos)
         let updatePatientQuery = 'UPDATE patients SET ';
         let updatePatientParams = [];
         let paramCount = 1;
@@ -192,7 +180,6 @@ const updatePatient = async (id, nome, email, birth_date, cpf, number_phone) => 
         }
         
         if (updatePatientParams.length > 0) {
-            // Remover a última vírgula e espaço
             updatePatientQuery = updatePatientQuery.slice(0, -2);
             updatePatientQuery += ` WHERE id = $${paramCount}`;
             updatePatientParams.push(id);
@@ -202,7 +189,6 @@ const updatePatient = async (id, nome, email, birth_date, cpf, number_phone) => 
         
         await client.query('COMMIT');
         
-        // Retornar dados atualizados completos
         const updatedPatient = await getPatientById(id);
         return updatedPatient;
         
@@ -219,14 +205,12 @@ const deletePatient = async (id) => {
     try {
         await client.query('BEGIN');
         
-        // Buscar dados do paciente antes de deletar
         const patientData = await getPatientById(id);
         
         if (!patientData) {
             return null;
         }
         
-        // Deletar paciente (CASCADE irá deletar o usuário automaticamente)
         await client.query(
             'DELETE FROM patients WHERE id = $1', 
             [id]

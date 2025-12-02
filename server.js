@@ -13,7 +13,6 @@ app.use(express.json());
 
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-// Rotas da API
 app.use("/api/pacientes", patientRoutes);
 app.use("/api/especialidades", especialtyRoutes);
 app.use("/api/medicos", doctorRoutes);
