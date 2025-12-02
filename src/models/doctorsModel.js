@@ -62,7 +62,7 @@ const createDoctor = async (nome, email, password, name, birth_date, number_phon
         
         const doctorResult = await client.query(
             `INSERT INTO doctors (user_id, name, birth_date, number_phone, especialty_id, doctor_photo) 
-             VALUES ($1, $2, $3, $4, $5) RETURNING *`,
+             VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
             [userResult.rows[0].id, name, birth_date, number_phone, especialty_id, doctor_photo]
         );
         

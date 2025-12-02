@@ -44,8 +44,8 @@ const authenticateUser = async (req, res) => {
 const changePassword = async (req, res) => {
     try {
         const { email } = req.params;
-        const { currentPassword, newPassword } = req.body;
-        if (!currentPassword || !newPassword) {
+        const { oldPassword, newPassword } = req.body;
+        if (!oldPassword || !newPassword) {
             return res.status(400).json({ message: "Senha atual e nova senha são obrigatórias." });
         }
         if (newPassword.length < 6) {
@@ -55,7 +55,7 @@ const changePassword = async (req, res) => {
         if (!user) {
             return res.status(404).json({ message: "Usuário não encontrado." });
         }
-        const isCurrentPasswordValid = await bcrypt.compare(currentPassword, user.password);
+        const isCurrentPasswordValid = await bcrypt.compare(oldPassword, user.password);
         if (!isCurrentPasswordValid) {
             return res.status(401).json({ message: "Senha atual incorreta." });
         }
